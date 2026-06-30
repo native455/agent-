@@ -1,12 +1,18 @@
-from tinydb import TinyDB
+import json
+import os
 
-db = TinyDB("memory.json")
+MEMORY_FILE = "memory.json"
 
-def remember(user, ai):
-    db.insert({
-        "user": user,
-        "ai": ai
-    })
+def load_memory():
+    if not os.path.exists(MEMORY_FILE):
+        return []
 
-def recall(limit=5):
-    return db.all()[-limit:]
+    try:
+        with open(MEMORY_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return []
+
+def save_memory(memory):
+    with open(MEMORY_FILE, "w") as f:
+        json.dump(memory, f, indent=4)
