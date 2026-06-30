@@ -1,6 +1,6 @@
 from core.ai import ask_ai
 from core.planner import plan_task
-from registry import execute_tool
+from core.registry import execute_tool
 
 messages = [
     {
