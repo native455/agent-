@@ -26,7 +26,8 @@ Return ONLY JavaScript.
     messages = [
         {
             "role": "system",
-            "content": "You are an expert software engineer. Return code only."
+            "content":
+            "You are an expert software engineer. Return code only."
         },
         {
             "role": "user",

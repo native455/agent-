@@ -1,6 +1,6 @@
 from core.ai import ask_ai
-from core.planner import plan_task
-from core.registry import execute_tool
+from core.router import decide
+from core.executor import execute_plan
 
 messages = [
     {
@@ -9,23 +9,31 @@ messages = [
     }
 ]
 
-print("=" * 40)
-print("      MyAgent V7.2")
-print("=" * 40)
+print("=" * 45)
+print("           MyAgent V7")
+print("=" * 45)
 print("Type 'exit' to quit.\n")
 
 while True:
+
     user = input("You: ")
 
     if user.lower() == "exit":
         break
 
-    tasks = plan_task(user)
+    tasks = decide(user)
 
     if tasks:
-        for task in tasks:
-            result = execute_tool(task)
+
+        print("\nExecuting plan...\n")
+
+        results = execute_plan(tasks)
+
+        for result in results:
             print(result)
+
+        print()
+
         continue
 
     messages.append({
@@ -34,6 +42,7 @@ while True:
     })
 
     try:
+
         reply = ask_ai(messages)
 
         print("\nMyAgent:", reply, "\n")
