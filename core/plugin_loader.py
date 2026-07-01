@@ -1,37 +1,50 @@
-import importlib
-import os
+"""
+Plugin Loader
 
-PLUGIN_FOLDER = "plugins"
+Loads all installed plugins.
+"""
+
+import importlib
+from pathlib import Path
+
+PLUGIN_DIR = Path("plugins")
 
 
 def load_plugins():
-    loaded = {}
+    tools = {}
 
-    if not os.path.exists(PLUGIN_FOLDER):
-        os.makedirs(PLUGIN_FOLDER)
-        return loaded
+    if not PLUGIN_DIR.exists():
+        return tools
 
-    for filename in os.listdir(PLUGIN_FOLDER):
+    for plugin in PLUGIN_DIR.iterdir():
 
-        if not filename.endswith(".py"):
+        # Ignore __pycache__ and non-plugin folders
+        if (
+            not plugin.is_dir()
+            or plugin.name.startswith("__")
+        ):
             continue
 
-        if filename.startswith("__"):
+        # A valid plugin must contain plugin.py
+        if not (plugin / "plugin.py").exists():
             continue
-
-        module_name = filename[:-3]
 
         try:
-            module = importlib.import_module(f"plugins.{module_name}")
+            module = importlib.import_module(
+                f"plugins.{plugin.name}.plugin"
+            )
 
-            if hasattr(module, "TOOLS"):
+            info = module.PLUGIN
 
-                loaded.update(module.TOOLS)
+            print(
+                f"Loaded plugin: "
+                f"{info['name']} "
+                f"v{info['version']}"
+            )
 
-                print(f"Loaded plugin: {module_name}")
+            tools.update(info["tools"])
 
         except Exception as e:
+            print(f"Failed loading {plugin.name}: {e}")
 
-            print(f"Plugin {module_name} failed: {e}")
-
-    return loaded
+    return tools
