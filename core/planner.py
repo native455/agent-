@@ -1,72 +1,94 @@
-import re
+import json
+from core.ai import ask_ai
 
-def plan_task(user_input):
-    text = user_input.lower()
+SYSTEM_PROMPT = """
+You are MyAgent's autonomous planner.
 
-    tasks = []
+Return ONLY valid JSON.
 
-    # Website project
-    if "website" in text:
+Available tools:
 
-        folder = "Website"
+create_folder(folder)
 
-        m = re.search(
-            r"called\s+([A-Za-z0-9_-]+)|named\s+([A-Za-z0-9_-]+)",
-            user_input,
-            re.IGNORECASE,
-        )
+read_file(file)
 
-        if m:
-            folder = next(g for g in m.groups() if g)
+list_files()
 
-        tasks.append({
-            "tool":"create_folder",
-            "args":[folder]
-        })
+build_website(project)
 
-        tasks.append({
-            "tool":"create_file",
-            "args":[f"{folder}/index.html"]
-        })
+remember(key,value)
 
-        tasks.append({
-            "tool":"create_file",
-            "args":[f"{folder}/style.css"]
-        })
+recall(key)
 
-        tasks.append({
-            "tool":"create_file",
-            "args":[f"{folder}/script.js"]
-        })
+forget(key)
 
-        return tasks
+show_memory()
 
-    # Single folder
+Examples:
 
-    if "folder" in text:
+User:
+Remember my name is Okechukwu
 
-        m = re.search(
-            r"folder\s+(?:called|named)?\s*([A-Za-z0-9_-]+)",
-            user_input,
-            re.IGNORECASE,
-        )
+Return:
 
-        if m:
-            return [{
-                "tool":"create_folder",
-                "args":[m.group(1)]
-            }]
+[
+    {
+        "tool":"remember",
+        "args":["name","Okechukwu"]
+    }
+]
 
-    if text.startswith("read "):
-        return [{
-            "tool":"read_file",
-            "args":[user_input[5:].strip()]
-        }]
+User:
+What's my name?
 
-    if "list files" in text:
-        return [{
-            "tool":"list_files",
-            "args":[]
-        }]
+Return:
 
-    return None
+[
+    {
+        "tool":"recall",
+        "args":["name"]
+    }
+]
+
+User:
+Build a portfolio website
+
+Return:
+
+[
+    {
+        "tool":"create_folder",
+        "args":["Portfolio"]
+    },
+    {
+        "tool":"build_website",
+        "args":["Portfolio"]
+    }
+]
+
+If no tools are needed return:
+
+[]
+"""
+
+
+def plan_task(user):
+
+    messages = [
+        {
+            "role": "system",
+            "content": SYSTEM_PROMPT
+        },
+        {
+            "role": "user",
+            "content": user
+        }
+    ]
+
+    reply = ask_ai(messages)
+
+    try:
+        return json.loads(reply)
+
+    except Exception:
+        return []
