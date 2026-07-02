@@ -1,133 +1,85 @@
-import os
-import subprocess
-from datetime import datetime
+"""
+MyAgent Developer Console
 
-VERSION_FILE = "VERSION"
+Version: 11.0.0-dev
+"""
 
+from pathlib import Path
 
-def clear():
-    os.system("clear")
+from plugins.plugin_manager.manager import (
+    plugin_count,
+    plugin_names,
+)
 
+from core.registry import list_available_tools
 
-def version():
-    if not os.path.exists(VERSION_FILE):
-        return "Unknown"
-
-    with open(VERSION_FILE, "r", encoding="utf-8") as f:
-        return f.read().strip()
-
-
-def run(cmd):
-    print(f"\n$ {cmd}\n")
-    subprocess.run(cmd, shell=True)
+VERSION_FILE = Path("VERSION")
 
 
-def self_test():
+def get_version():
+    if VERSION_FILE.exists():
+        return VERSION_FILE.read_text().strip()
+    return "Unknown"
 
-    print("\nRunning self-test...\n")
 
-    files = [
-        "agent.py",
-        "config.py",
-        "update.py",
-        "core/ai.py",
-        "core/router.py",
-        "core/planner.py",
-        "core/executor.py",
-        "core/registry.py",
-        "core/generator.py",
-        "core/project_builder.py",
-        "core/memory.py",
-        "core/memory_tools.py",
-    ]
+def dashboard():
 
-    missing = []
+    print("=" * 50)
+    print("        MyAgent Developer Console")
+    print("=" * 50)
 
-    for file in files:
-        if not os.path.exists(file):
-            missing.append(file)
+    print(f"Version          : {get_version()}")
+    print("Status           : READY")
+    print("Branch           : develop")
 
-    if missing:
-        print("Missing files:")
-        for m in missing:
-            print("-", m)
-    else:
-        print("All required files exist.")
+    print(f"Plugins Loaded   : {plugin_count()}")
 
-    print("\nChecking Python imports...\n")
-
-    result = subprocess.run(
-        "python -m py_compile agent.py",
-        shell=True
+    print(
+        f"Available Tools  : {len(list_available_tools())}"
     )
 
-    if result.returncode == 0:
-        print("Python compilation passed.")
-    else:
-        print("Compilation failed.")
+    print("=" * 50)
+
+    print("1. List Plugins")
+    print("2. List Tools")
+    print("3. Exit")
 
 
-def backup():
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    filename = f"MyAgent_{timestamp}.zip"
-
-    print("Creating backup...")
-
-    subprocess.run(
-        f"zip -r {filename} .",
-        shell=True
-    )
-
-    print("Backup saved as:")
-    print(filename)
-
-
-def menu():
+def main():
 
     while True:
 
-        clear()
+        dashboard()
 
-        print("=" * 45)
-        print("      MyAgent Developer Mode")
-        print("=" * 45)
-        print(f"Version: {version()}")
-        print()
-
-        print("1. Run Self Test")
-        print("2. Backup Project")
-        print("3. Git Status")
-        print("4. Git Pull")
-        print("5. Git Push")
-        print("6. Exit")
-
-        choice = input("\nSelect: ")
+        choice = input("\nSelect: ").strip()
 
         if choice == "1":
-            self_test()
-            input("\nPress ENTER...")
+
+            print("\nInstalled Plugins\n")
+
+            for plugin in plugin_names():
+                print(" -", plugin)
+
+            input("\nPress Enter...")
 
         elif choice == "2":
-            backup()
-            input("\nPress ENTER...")
+
+            print("\nAvailable Tools\n")
+
+            for tool in list_available_tools():
+                print(" -", tool)
+
+            input("\nPress Enter...")
 
         elif choice == "3":
-            run("git status")
-            input("\nPress ENTER...")
 
-        elif choice == "4":
-            run("git pull")
-            input("\nPress ENTER...")
-
-        elif choice == "5":
-            run("git push")
-            input("\nPress ENTER...")
-
-        elif choice == "6":
+            print("\nGoodbye.\n")
             break
+
+        else:
+
+            print("\nInvalid option.\n")
 
 
 if __name__ == "__main__":
-    menu()
+    main()
