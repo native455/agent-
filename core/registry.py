@@ -1,71 +1,38 @@
-from core.tools import (
-    create_folder,
-    read_file,
-    list_files,
-)
+"""
+MyAgent Registry
 
-from core.project_builder import build_website
-
-from core.memory_tools import (
-    remember,
-    recall,
-    forget,
-    show_memory,
-)
+Registers built-in tools and plugin tools.
+"""
 
 from core.plugin_loader import load_plugins
 
-
-TOOLS = {
-
-    # ==========================
-    # Built-in File Tools
-    # ==========================
-    "create_folder": create_folder,
-    "read_file": read_file,
-    "list_files": list_files,
-
-    # ==========================
-    # Project Builder
-    # ==========================
-    "build_website": build_website,
-
-    # ==========================
-    # Memory Tools
-    # ==========================
-    "remember": remember,
-    "recall": recall,
-    "forget": forget,
-    "show_memory": show_memory,
-}
-
-
-# =====================================
-# Load every plugin automatically
-# =====================================
-TOOLS.update(load_plugins())
+# Load all plugin tools
+TOOLS = load_plugins()
 
 
 def execute_tool(task):
     """
-    Execute a task dictionary.
+    Execute a tool request.
 
-    Example:
-
+    Expected format:
     {
-        "tool":"create_folder",
-        "args":["Portfolio"]
+        "tool": "tool_name",
+        "args": [...]
     }
     """
 
-    tool = task.get("tool")
+    tool_name = task.get("tool")
     args = task.get("args", [])
 
-    if tool not in TOOLS:
-        return f"Unknown tool: {tool}"
+    if tool_name not in TOOLS:
+        return f"Unknown tool: {tool_name}"
 
     try:
-        return TOOLS[tool](*args)
-
+        return TOOLS[tool_name](*args)
     except Exception as e:
         return f"Tool Error: {e}"
+
+
+def list_available_tools():
+    """Return all available tool names."""
+    return sorted(TOOLS.keys())
