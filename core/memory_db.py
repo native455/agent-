@@ -126,3 +126,56 @@ def delete_memory(memory_id):
     save_memory(new_memory)
 
     return True
+def search_memory(keyword):
+    """
+    Search memories by title or content.
+    """
+
+    keyword = keyword.lower()
+
+    results = []
+
+    for entry in load_memory():
+
+        if (
+            keyword in entry["title"].lower()
+            or keyword in entry["content"].lower()
+        ):
+            results.append(entry)
+
+    return results
+
+
+def search_category(category):
+    """
+    Search memories by category.
+    """
+
+    category = category.lower()
+
+    return [
+        entry
+        for entry in load_memory()
+        if entry["category"].lower() == category
+    ]
+
+
+def memory_statistics():
+    """
+    Return memory statistics.
+    """
+
+    memory = load_memory()
+
+    categories = {}
+
+    for entry in memory:
+
+        cat = entry["category"]
+
+        categories[cat] = categories.get(cat, 0) + 1
+
+    return {
+        "total": len(memory),
+        "categories": categories
+    }
