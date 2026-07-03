@@ -1,13 +1,14 @@
 """
 MyAgent Registry
 
-Registers built-in tools and plugin tools.
+Version: 12.1.0
 """
 
 from core.plugin_loader import load_plugins
 
-# Filesystem tools
+# Built-in tools
 from core.tools import (
+    list_files,
     create_folder,
     create_file,
     read_file,
@@ -15,12 +16,8 @@ from core.tools import (
     append_file,
     delete_file,
     copy_file,
-    list_files,
     run_command,
 )
-
-# Project Builder
-from core.project_builder import build_website
 
 # Memory tools
 from core.memory_tools import (
@@ -30,12 +27,9 @@ from core.memory_tools import (
     show_memory,
 )
 
-# --------------------------
-# Built-in tools
-# --------------------------
-
 TOOLS = {
-    # Filesystem
+    # Core tools
+    "list_files": list_files,
     "create_folder": create_folder,
     "create_file": create_file,
     "read_file": read_file,
@@ -43,38 +37,63 @@ TOOLS = {
     "append_file": append_file,
     "delete_file": delete_file,
     "copy_file": copy_file,
-    "list_files": list_files,
     "run_command": run_command,
 
-    # Website
-    "build_website": build_website,
-
-    # Memory
+    # Memory tools
     "remember": remember,
     "recall": recall,
     "forget": forget,
     "show_memory": show_memory,
 }
 
-# --------------------------
-# Load plugin tools
-# --------------------------
-
+# Load plugins and merge them
 TOOLS.update(load_plugins())
 
 
 def execute_tool(task):
+
     tool_name = task.get("tool")
     args = task.get("args", [])
 
     if tool_name not in TOOLS:
-        return f"Unknown tool: {tool_name}"
+        return {
+            "success": False,
+            "data": None,
+            "error": f"Unknown tool: {tool_name}",
+            "metadata": {
+                "tool": tool_name
+            }
+        }
 
     try:
-        return TOOLS[tool_name](*args)
+
+        result = TOOLS[tool_name](*args)
+
+        # Already using Tool Result API
+        if isinstance(result, dict) and "success" in result:
+            return result
+
+        # Legacy compatibility
+        return {
+            "success": True,
+            "data": result,
+            "error": None,
+            "metadata": {
+                "tool": tool_name,
+                "legacy": True
+            }
+        }
 
     except Exception as e:
-        return f"Tool Error: {e}"
+
+        return {
+            "success": False,
+            "data": None,
+            "error": str(e),
+            "metadata": {
+                "tool": tool_name
+            }
+        }
 
 
 def list_available_tools():

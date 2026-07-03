@@ -30,5 +30,69 @@
                 "result": "File not found."
             }
         ]
+    },
+    {
+        "goal": "Remember my favorite language is Python",
+        "created": "2026-07-03T22:45:49.648303",
+        "results": [
+            {
+                "id": 1,
+                "tool": "remember",
+                "status": "failed",
+                "attempts": 1,
+                "started_at": "2026-07-03T22:45:49.629672",
+                "finished_at": "2026-07-03T22:45:49.629774",
+                "duration": 0.0,
+                "result": "Unknown tool: remember"
+            }
+        ]
+    },
+    {
+        "goal": "What is my favorite language?",
+        "created": "2026-07-03T22:46:14.430498",
+        "results": [
+            {
+                "id": 1,
+                "tool": "recall",
+                "status": "failed",
+                "attempts": 1,
+                "started_at": "2026-07-03T22:46:14.429194",
+                "finished_at": "2026-07-03T22:46:14.429285",
+                "duration": 0.0,
+                "result": "Unknown tool: recall"
+            }
+        ]
+    },
+    {
+        "goal": "Remember my favorite language is Python",
+        "created": "2026-07-03T22:53:44.412376",
+        "results": [
+            {
+                "id": 1,
+                "tool": "remember",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-03T22:53:44.395012",
+                "finished_at": "2026-07-03T22:53:44.410893",
+                "duration": 0.016,
+                "result": "I'll remember that favorite_language = Python"
+            }
+        ]
+    },
+    {
+        "goal": "What is my favorite language?",
+        "created": "2026-07-03T22:54:03.111675",
+        "results": [
+            {
+                "id": 1,
+                "tool": "recall",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-03T22:54:03.109117",
+                "finished_at": "2026-07-03T22:54:03.110532",
+                "duration": 0.001,
+                "result": "Python"
+            }
+        ]
     }
 ]
