@@ -1,0 +1,34 @@
+[
+    {
+        "goal": "cat data/plans.json",
+        "created": "2026-07-03T08:51:26.283122",
+        "results": [
+            {
+                "id": 1,
+                "tool": "read_file",
+                "status": "completed",
+                "started_at": "2026-07-03T08:51:26.280814",
+                "finished_at": "2026-07-03T08:51:26.281273",
+                "duration": 0.0,
+                "attempts": 1,
+                "result": "File not found."
+            }
+        ]
+    },
+    {
+        "goal": "Read missing.txt",
+        "created": "2026-07-03T08:58:30.990934",
+        "results": [
+            {
+                "id": 1,
+                "tool": "read_file",
+                "status": "completed",
+                "started_at": "2026-07-03T08:58:30.989182",
+                "finished_at": "2026-07-03T08:58:30.989695",
+                "duration": 0.001,
+                "attempts": 1,
+                "result": "File not found."
+            }
+        ]
+    }
+]

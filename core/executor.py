@@ -14,8 +14,10 @@ from core.execution_state import (
 
 from core.retry import retry
 
+from core.plan_history import record_plan
 
-def execute_plan(plan):
+
+def execute_plan(plan, goal="Unknown Task"):
 
     results = []
 
@@ -33,11 +35,8 @@ def execute_plan(plan):
         )
 
         if success:
-
             finish_task(task)
-
         else:
-
             fail_task(task)
 
         results.append(
@@ -52,5 +51,8 @@ def execute_plan(plan):
                 "result": result,
             }
         )
+
+    # Save completed plan
+    record_plan(goal, results)
 
     return results
