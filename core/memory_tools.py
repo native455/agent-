@@ -1,28 +1,55 @@
-from core.memory import memory
+from core.memory_db import (
+    add_memory,
+    get_all_memory,
+    search_memory,
+    delete_memory,
+)
 
 
 def remember(key, value):
-    memory.remember(key, value)
+    add_memory(
+        "memory",
+        key,
+        value,
+    )
+
     return f"I'll remember that {key} = {value}"
 
 
 def recall(key):
 
-    value = memory.recall(key)
+    results = search_memory(key)
 
-    if value is None:
+    if not results:
         return "I don't know."
 
-    return value
+    return results[-1]["content"]
 
 
 def forget(key):
 
-    memory.forget(key)
+    results = search_memory(key)
+
+    if not results:
+        return "Nothing to forget."
+
+    delete_memory(results[-1]["id"])
 
     return f"Forgot {key}."
 
 
 def show_memory():
 
-    return memory.all()
+    memories = get_all_memory()
+
+    if not memories:
+        return "Memory is empty."
+
+    lines = []
+
+    for item in memories:
+        lines.append(
+            f"{item['title']} = {item['content']}"
+        )
+
+    return "\n".join(lines)

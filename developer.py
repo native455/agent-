@@ -1,7 +1,7 @@
 """
 MyAgent Developer Console
 
-Version: 11.0.0-dev
+Version: 11.1.0-dev
 """
 
 from pathlib import Path
@@ -13,6 +13,11 @@ from plugins.plugin_manager.manager import (
 
 from core.registry import list_available_tools
 from core.health import health_report
+
+from core.memory_db import (
+    get_all_memory,
+    memory_statistics,
+)
 
 VERSION_FILE = Path("VERSION")
 
@@ -29,9 +34,9 @@ def get_version():
 def dashboard():
     """Display the developer dashboard."""
 
-    print("=" * 50)
-    print("        MyAgent Developer Console")
-    print("=" * 50)
+    print("=" * 60)
+    print("           MyAgent Developer Console")
+    print("=" * 60)
 
     print(f"Version          : {get_version()}")
     print("Status           : READY")
@@ -39,12 +44,14 @@ def dashboard():
     print(f"Plugins Loaded   : {plugin_count()}")
     print(f"Available Tools  : {len(list_available_tools())}")
 
-    print("=" * 50)
+    print("=" * 60)
 
     print("1. List Plugins")
     print("2. List Tools")
     print("3. System Health")
-    print("4. Exit")
+    print("4. View Memory")
+    print("5. Memory Statistics")
+    print("6. Exit")
 
 
 def list_plugins_menu():
@@ -59,7 +66,7 @@ def list_plugins_menu():
 
 
 def list_tools_menu():
-    """Display registered tools."""
+    """Display available tools."""
 
     print("\nAvailable Tools\n")
 
@@ -70,16 +77,59 @@ def list_tools_menu():
 
 
 def health_menu():
-    """Display health information."""
+    """Display system health."""
 
     print("\nSystem Health\n")
 
     report = health_report()
 
     for key, value in report.items():
-        print(f"{key:<15}: {value}")
+        print(f"{key:<18}: {value}")
 
     input("\nPress Enter to continue...")
+
+
+def memory_menu():
+    """Display all stored memories."""
+
+    memories = get_all_memory()
+
+    print("\nStored Memories\n")
+    print("=" * 60)
+
+    if not memories:
+        print("No memories found.")
+        input("\nPress Enter...")
+        return
+
+    for index, memory in enumerate(memories, start=1):
+
+        print(f"[{index}]")
+        print("ID       :", memory["id"])
+        print("Category :", memory["category"])
+        print("Title    :", memory["title"])
+        print("Content  :", memory["content"])
+        print("-" * 60)
+
+    input("\nPress Enter...")
+
+
+def statistics_menu():
+    """Display memory statistics."""
+
+    stats = memory_statistics()
+
+    print("\nMemory Statistics\n")
+    print("=" * 60)
+
+    print(f"Total Memories : {stats['total']}")
+
+    print("\nCategories\n")
+
+    for category, count in stats["categories"].items():
+        print(f"{category:<20}{count}")
+
+    input("\nPress Enter...")
 
 
 def main():
@@ -100,6 +150,12 @@ def main():
             health_menu()
 
         elif choice == "4":
+            memory_menu()
+
+        elif choice == "5":
+            statistics_menu()
+
+        elif choice == "6":
             print("\nGoodbye.\n")
             break
 

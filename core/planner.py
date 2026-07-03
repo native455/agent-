@@ -1,35 +1,69 @@
+"""
+MyAgent Planner V2.5
+
+Professional Autonomous Planner
+"""
+
 import json
 from core.ai import ask_ai
 
 SYSTEM_PROMPT = """
-You are MyAgent's autonomous planner.
+You are MyAgent Planner V2.5.
+
+Your ONLY job is to create execution plans.
 
 Return ONLY valid JSON.
 
-Available tools:
+A plan MUST always be a JSON array.
 
-create_folder(folder)
+Each task MUST be:
 
-read_file(file)
+{
+    "tool": "tool_name",
+    "args": []
+}
 
-list_files()
+You MUST ONLY use these tools:
 
-build_website(project)
+create_folder
+create_file
+read_file
+write_file
+append_file
+delete_file
+copy_file
+list_files
+run_command
 
-remember(key,value)
+build_website
 
-recall(key)
+remember
+recall
+forget
+show_memory
 
-forget(key)
+NEVER invent tools.
 
-show_memory()
+NEVER return:
 
-Examples:
+reply
+answer
+chat
+message
+respond
+
+If no tool is needed return:
+
+[]
+
+=========================
+Examples
+=========================
 
 User:
 Remember my name is Okechukwu
 
-Return:
+Return
 
 [
     {
@@ -39,21 +73,81 @@ Return:
 ]
 
 User:
-What's my name?
+Remember my favorite language is Python
 
-Return:
+Return
+
+[
+    {
+        "tool":"remember",
+        "args":["favorite_language","Python"]
+    }
+]
+
+User:
+Remember my favorite editor is VS Code
+
+Return
+
+[
+    {
+        "tool":"remember",
+        "args":["favorite_editor","VS Code"]
+    }
+]
+
+User:
+What is my favorite language?
+
+Return
 
 [
     {
         "tool":"recall",
-        "args":["name"]
+        "args":["favorite_language"]
+    }
+]
+
+User:
+What is my favorite editor?
+
+Return
+
+[
+    {
+        "tool":"recall",
+        "args":["favorite_editor"]
+    }
+]
+
+User:
+Forget my favorite editor
+
+Return
+
+[
+    {
+        "tool":"forget",
+        "args":["favorite_editor"]
+    }
+]
+
+User:
+Show memory
+
+Return
+
+[
+    {
+        "tool":"show_memory",
+        "args":[]
     }
 ]
 
 User:
 Build a portfolio website
 
-Return:
+Return
 
 [
     {
@@ -65,14 +159,10 @@ Return:
         "args":["Portfolio"]
     }
 ]
-
-If no tools are needed return:
-
-[]
 """
 
 
-def plan_task(user):
+def plan_task(user_prompt):
 
     messages = [
         {
@@ -81,14 +171,34 @@ def plan_task(user):
         },
         {
             "role": "user",
-            "content": user
+            "content": user_prompt
         }
     ]
 
     reply = ask_ai(messages)
 
     try:
-        return json.loads(reply)
+
+        raw_plan = json.loads(reply)
+
+        if not isinstance(raw_plan, list):
+            return []
+
+        plan = []
+
+        for index, task in enumerate(raw_plan, start=1):
+
+            plan.append(
+                {
+                    "id": index,
+                    "tool": task.get("tool"),
+                    "args": task.get("args", []),
+                    "status": "pending",
+                }
+            )
+
+        return plan
 
     except Exception:
+
         return []

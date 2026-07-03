@@ -9,37 +9,57 @@ messages = [
     }
 ]
 
-print("=" * 45)
-print("           MyAgent V7")
-print("=" * 45)
+print("=" * 50)
+print("           MyAgent V11")
+print("=" * 50)
+print("Planner V2.5 Enabled")
 print("Type 'exit' to quit.\n")
 
 while True:
 
-    user = input("You: ")
+    user = input("You: ").strip()
 
     if user.lower() == "exit":
         break
 
-    tasks = decide(user)
+    plan = decide(user)
 
-    if tasks:
+    if len(plan) > 0:
 
-        print("\nExecuting plan...\n")
+        print("\n========== PLAN ==========\n")
 
-        results = execute_plan(tasks)
+        for step, task in enumerate(plan, start=1):
+            print(f"{step}. {task['tool']} {task.get('args', [])}")
 
-        for result in results:
-            print(result)
+        print("\n==========================")
+
+        results = execute_plan(plan)
+
+        print("\n========== RESULTS ==========\n")
+
+        for item in results:
+
+            icon = "✓"
+
+            if item["status"] == "failed":
+                icon = "✗"
+
+            print(
+                f"{icon} Step {item['id']} | "
+                f"{item['tool']} | "
+                f"{item['status']} | "
+                f"{item['result']}"
+            )
 
         print()
-
         continue
 
-    messages.append({
-        "role": "user",
-        "content": user
-    })
+    messages.append(
+        {
+            "role": "user",
+            "content": user
+        }
+    )
 
     try:
 
@@ -47,10 +67,13 @@ while True:
 
         print("\nMyAgent:", reply, "\n")
 
-        messages.append({
-            "role": "assistant",
-            "content": reply
-        })
+        messages.append(
+            {
+                "role": "assistant",
+                "content": reply
+            }
+        )
 
     except Exception as e:
+
         print("AI Error:", e)
