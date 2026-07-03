@@ -12,6 +12,8 @@ from core.execution_state import (
     fail_task,
 )
 
+from core.retry import retry
+
 
 def execute_plan(plan):
 
@@ -25,38 +27,30 @@ def execute_plan(plan):
 
         start_task(task)
 
-        try:
+        success, result, attempts = retry(
+            execute_tool,
+            task
+        )
 
-            result = execute_tool(task)
+        if success:
 
             finish_task(task)
 
-            results.append(
-                {
-                    "id": task["id"],
-                    "tool": task["tool"],
-                    "status": task["status"],
-                    "started_at": task["started_at"],
-                    "finished_at": task["finished_at"],
-                    "duration": task["duration"],
-                    "result": result,
-                }
-            )
-
-        except Exception as e:
+        else:
 
             fail_task(task)
 
-            results.append(
-                {
-                    "id": task["id"],
-                    "tool": task["tool"],
-                    "status": task["status"],
-                    "started_at": task["started_at"],
-                    "finished_at": task["finished_at"],
-                    "duration": task["duration"],
-                    "result": str(e),
-                }
-            )
+        results.append(
+            {
+                "id": task["id"],
+                "tool": task["tool"],
+                "status": task["status"],
+                "started_at": task["started_at"],
+                "finished_at": task["finished_at"],
+                "duration": task["duration"],
+                "attempts": attempts,
+                "result": result,
+            }
+        )
 
     return results

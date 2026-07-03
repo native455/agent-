@@ -10,9 +10,9 @@ messages = [
 ]
 
 print("=" * 50)
-print("           MyAgent V12")
+print("           MyAgent V11")
 print("=" * 50)
-print("Planner V3 Enabled")
+print("Planner V2 Enabled")
 print("Type 'exit' to quit.\n")
 
 while True:
@@ -24,57 +24,51 @@ while True:
 
     plan = decide(user)
 
-    if plan:
+    if len(plan) > 0:
 
-        print("\n========== PLAN ==========\n")
+        print("\n========== PLAN ==========")
 
         for step, task in enumerate(plan, start=1):
-            print(f"{step}. {task['tool']} {task.get('args', [])}")
+            print(
+                f"{step}. {task['tool']} {task.get('args', [])}"
+            )
 
-        print("\n==========================")
+        print("==========================\n")
 
         results = execute_plan(plan)
 
-        print("\n========== RESULTS ==========\n")
+        print("\n========== RESULTS ==========")
 
         for item in results:
-
             icon = "✓"
-
             if item["status"] == "failed":
                 icon = "✗"
 
             print(
                 f"{icon} Step {item['id']} | "
                 f"{item['tool']} | "
-                f"{item['status']} | "
+                f"Attempts: {item['attempts']} | "
                 f"{item['duration']}s | "
                 f"{item['result']}"
             )
 
         print()
+
         continue
 
-    messages.append(
-        {
-            "role": "user",
-            "content": user
-        }
-    )
+    messages.append({
+        "role": "user",
+        "content": user
+    })
 
     try:
-
         reply = ask_ai(messages)
-
         print("\nMyAgent:", reply, "\n")
 
-        messages.append(
-            {
-                "role": "assistant",
-                "content": reply
-            }
-        )
+        messages.append({
+            "role": "assistant",
+            "content": reply
+        })
 
     except Exception as e:
-
         print("AI Error:", e)
