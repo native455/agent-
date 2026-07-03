@@ -10,9 +10,9 @@ messages = [
 ]
 
 print("=" * 50)
-print("           MyAgent V11")
+print("           MyAgent V12")
 print("=" * 50)
-print("Planner V2.5 Enabled")
+print("Planner V3 Enabled")
 print("Type 'exit' to quit.\n")
 
 while True:
@@ -24,7 +24,7 @@ while True:
 
     plan = decide(user)
 
-    if len(plan) > 0:
+    if plan:
 
         print("\n========== PLAN ==========\n")
 
@@ -48,6 +48,7 @@ while True:
                 f"{icon} Step {item['id']} | "
                 f"{item['tool']} | "
                 f"{item['status']} | "
+                f"{item['duration']}s | "
                 f"{item['result']}"
             )
 

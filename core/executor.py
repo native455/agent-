@@ -1,4 +1,16 @@
+"""
+MyAgent Executor
+
+Planner V3 Execution Engine
+"""
+
 from core.registry import execute_tool
+
+from core.execution_state import (
+    start_task,
+    finish_task,
+    fail_task,
+)
 
 
 def execute_plan(plan):
@@ -9,34 +21,42 @@ def execute_plan(plan):
 
     for task in plan:
 
-        print(
-            f"[{task['id']}/{total}] {task['tool']}"
-        )
+        print(f"[{task['id']}/{total}] {task['tool']}")
 
-        task["status"] = "running"
+        start_task(task)
 
         try:
 
             result = execute_tool(task)
 
-            task["status"] = "completed"
+            finish_task(task)
 
-            results.append({
-                "id": task["id"],
-                "tool": task["tool"],
-                "status": task["status"],
-                "result": result
-            })
+            results.append(
+                {
+                    "id": task["id"],
+                    "tool": task["tool"],
+                    "status": task["status"],
+                    "started_at": task["started_at"],
+                    "finished_at": task["finished_at"],
+                    "duration": task["duration"],
+                    "result": result,
+                }
+            )
 
         except Exception as e:
 
-            task["status"] = "failed"
+            fail_task(task)
 
-            results.append({
-                "id": task["id"],
-                "tool": task["tool"],
-                "status": task["status"],
-                "result": str(e)
-            })
+            results.append(
+                {
+                    "id": task["id"],
+                    "tool": task["tool"],
+                    "status": task["status"],
+                    "started_at": task["started_at"],
+                    "finished_at": task["finished_at"],
+                    "duration": task["duration"],
+                    "result": str(e),
+                }
+            )
 
     return results
