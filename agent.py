@@ -1,3 +1,14 @@
+"""
+MyAgent
+
+Version: 12.4.3
+"""
+
+from core.bootstrap import bootstrap
+
+# Initialize MyAgent
+bootstrap()
+
 from core.ai import ask_ai
 from core.router import decide
 from core.executor import execute_plan
@@ -10,9 +21,11 @@ messages = [
 ]
 
 print("=" * 50)
-print("           MyAgent V12")
+print("            MyAgent V12.4.3")
 print("=" * 50)
-print("Planner V3 Enabled")
+print("Intent Router Enabled")
+print("Capability Registry Enabled")
+print("Bootstrap Enabled")
 print("Type 'exit' to quit.\n")
 
 while True:
@@ -20,20 +33,26 @@ while True:
     user = input("You: ").strip()
 
     if user.lower() == "exit":
+        print("\nGoodbye.\n")
         break
 
     plan = decide(user)
 
-    if plan:
+    if isinstance(plan, list) and len(plan) > 0:
 
         print("\n========== PLAN ==========\n")
 
         for step, task in enumerate(plan, start=1):
-            print(f"{step}. {task['tool']} {task.get('args', [])}")
+            print(
+                f"{step}. {task.get('tool')} {task.get('args', [])}"
+            )
 
         print("\n==========================")
 
-        results = execute_plan(plan, goal=user)
+        results = execute_plan(
+            plan,
+            goal=user
+        )
 
         print("\n========== RESULTS ==========\n")
 
@@ -49,17 +68,18 @@ while True:
                 f"{item['tool']} | "
                 f"{item['status']} | "
                 f"Attempts: {item['attempts']} | "
-                f"{item['duration']}s | "
+                f"{item['duration']:.2f}s | "
                 f"{item['result']}"
             )
 
         print()
+
         continue
 
     messages.append(
         {
             "role": "user",
-            "content": user
+            "content": user,
         }
     )
 
@@ -67,15 +87,18 @@ while True:
 
         reply = ask_ai(messages)
 
-        print("\nMyAgent:", reply, "\n")
+        if reply is None:
+            reply = "I don't have a response."
+
+        print(f"\nMyAgent: {reply}\n")
 
         messages.append(
             {
                 "role": "assistant",
-                "content": reply
+                "content": reply,
             }
         )
 
     except Exception as e:
 
-        print("AI Error:", e)
+        print(f"\nAI Error: {e}\n")

@@ -1,12 +1,19 @@
 """
-MyAgent Registry
+MyAgent Unified Tool Registry
 
-Version: 12.1.0
+Version: 13.0.1
 """
 
 from core.plugin_loader import load_plugins
 
 # Built-in tools
+from core.memory_tools import (
+    remember,
+    recall,
+    forget,
+    show_memory,
+)
+
 from core.tools import (
     list_files,
     create_folder,
@@ -19,16 +26,30 @@ from core.tools import (
     run_command,
 )
 
-# Memory tools
-from core.memory_tools import (
-    remember,
-    recall,
-    forget,
-    show_memory,
+from core.project_tools import (
+    create_project,
+    open_project,
+    close_project,
+    list_projects,
+    project_status,
+    add_task,
+    show_tasks,
+    complete_task,
+    add_note,
+    show_notes,
 )
 
+from core.system_check import system_check
+
 TOOLS = {
-    # Core tools
+
+    # Memory
+    "remember": remember,
+    "recall": recall,
+    "forget": forget,
+    "show_memory": show_memory,
+
+    # Files
     "list_files": list_files,
     "create_folder": create_folder,
     "create_file": create_file,
@@ -39,62 +60,51 @@ TOOLS = {
     "copy_file": copy_file,
     "run_command": run_command,
 
-    # Memory tools
-    "remember": remember,
-    "recall": recall,
-    "forget": forget,
-    "show_memory": show_memory,
+    # Projects
+    "create_project": create_project,
+    "open_project": open_project,
+    "close_project": close_project,
+    "list_projects": list_projects,
+    "project_status": project_status,
+    "add_task": add_task,
+    "show_tasks": show_tasks,
+    "complete_task": complete_task,
+    "add_note": add_note,
+    "show_notes": show_notes,
+
+    # System
+    "system_check": system_check,
 }
 
-# Load plugins and merge them
+# Merge plugin tools
 TOOLS.update(load_plugins())
 
 
 def execute_tool(task):
+    """
+    Execute a tool request.
+
+    Expected format:
+    {
+        "tool": "...",
+        "args": [...]
+    }
+    """
 
     tool_name = task.get("tool")
     args = task.get("args", [])
 
     if tool_name not in TOOLS:
-        return {
-            "success": False,
-            "data": None,
-            "error": f"Unknown tool: {tool_name}",
-            "metadata": {
-                "tool": tool_name
-            }
-        }
+        return f"Unknown tool: {tool_name}"
 
     try:
-
-        result = TOOLS[tool_name](*args)
-
-        # Already using Tool Result API
-        if isinstance(result, dict) and "success" in result:
-            return result
-
-        # Legacy compatibility
-        return {
-            "success": True,
-            "data": result,
-            "error": None,
-            "metadata": {
-                "tool": tool_name,
-                "legacy": True
-            }
-        }
-
+        return TOOLS[tool_name](*args)
     except Exception as e:
-
-        return {
-            "success": False,
-            "data": None,
-            "error": str(e),
-            "metadata": {
-                "tool": tool_name
-            }
-        }
+        return f"Tool Error: {e}"
 
 
 def list_available_tools():
+    """
+    Return every executable tool.
+    """
     return sorted(TOOLS.keys())

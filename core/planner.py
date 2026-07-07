@@ -1,204 +1,86 @@
 """
-MyAgent Planner V2.5
+Dynamic Planner
 
-Professional Autonomous Planner
+MyAgent V12.3
 """
 
 import json
+
 from core.ai import ask_ai
+from core.registry import list_available_tools
 
-SYSTEM_PROMPT = """
-You are MyAgent Planner V2.5.
 
-Your ONLY job is to create execution plans.
+def build_prompt():
+    """
+    Build the planner prompt dynamically from all
+    registered tools.
+    """
+
+    tools = list_available_tools()
+
+    tool_list = "\n".join(f"- {tool}" for tool in tools)
+
+    return f"""
+You are MyAgent's autonomous planner.
 
 Return ONLY valid JSON.
 
-A plan MUST always be a JSON array.
+Available tools:
 
-Each task MUST be:
+{tool_list}
 
-{
-    "tool": "tool_name",
-    "args": []
-}
+Rules:
 
-You MUST ONLY use these tools:
-
-create_folder
-create_file
-read_file
-write_file
-append_file
-delete_file
-copy_file
-list_files
-run_command
-
-build_website
-
-remember
-recall
-forget
-show_memory
-
-NEVER invent tools.
-
-NEVER return:
-
-reply
-answer
-chat
-message
-respond
-
-If no tool is needed return:
-
-[]
-
-=========================
-Examples
-=========================
-
-User:
-Remember my name is Okechukwu
-
-Return
+1. Return ONLY valid JSON.
+2. Never include explanations.
+3. If no tools are required, return [].
+4. If one tool is needed, return a JSON array containing one object.
+5. Every task MUST use this format:
 
 [
-    {
-        "tool":"remember",
-        "args":["name","Okechukwu"]
-    }
-]
-
-User:
-Remember my favorite language is Python
-
-Return
-
-[
-    {
-        "tool":"remember",
-        "args":["favorite_language","Python"]
-    }
-]
-
-User:
-Remember my favorite editor is VS Code
-
-Return
-
-[
-    {
-        "tool":"remember",
-        "args":["favorite_editor","VS Code"]
-    }
-]
-
-User:
-What is my favorite language?
-
-Return
-
-[
-    {
-        "tool":"recall",
-        "args":["favorite_language"]
-    }
-]
-
-User:
-What is my favorite editor?
-
-Return
-
-[
-    {
-        "tool":"recall",
-        "args":["favorite_editor"]
-    }
-]
-
-User:
-Forget my favorite editor
-
-Return
-
-[
-    {
-        "tool":"forget",
-        "args":["favorite_editor"]
-    }
-]
-
-User:
-Show memory
-
-Return
-
-[
-    {
-        "tool":"show_memory",
-        "args":[]
-    }
-]
-
-User:
-Build a portfolio website
-
-Return
-
-[
-    {
-        "tool":"create_folder",
-        "args":["Portfolio"]
-    },
-    {
-        "tool":"build_website",
-        "args":["Portfolio"]
-    }
+    {{
+        "tool": "tool_name",
+        "args": []
+    }}
 ]
 """
 
 
-def plan_task(user_prompt):
+def plan_task(user):
 
     messages = [
         {
             "role": "system",
-            "content": SYSTEM_PROMPT
+            "content": build_prompt()
         },
         {
             "role": "user",
-            "content": user_prompt
+            "content": user
         }
     ]
 
     reply = ask_ai(messages)
 
+    print("\n========== PLANNER RAW RESPONSE ==========")
+    print(reply)
+    print("==========================================\n")
+
     try:
 
-        raw_plan = json.loads(reply)
+        data = json.loads(reply)
 
-        if not isinstance(raw_plan, list):
-            return []
+        # If AI returned a single object instead of a list
+        if isinstance(data, dict):
+            return [data]
 
-        plan = []
+        # If AI returned a proper list
+        if isinstance(data, list):
+            return data
 
-        for index, task in enumerate(raw_plan, start=1):
+        return []
 
-            plan.append(
-                {
-                    "id": index,
-                    "tool": task.get("tool"),
-                    "args": task.get("args", []),
-                    "status": "pending",
-                }
-            )
+    except Exception as e:
 
-        return plan
-
-    except Exception:
+        print("Planner JSON Error:", e)
 
         return []

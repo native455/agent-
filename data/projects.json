@@ -1,0 +1,20 @@
+{
+    "active": "testproject",
+    "projects": {
+        "TestProject": {
+            "tasks": [],
+            "notes": []
+        },
+        "testproject": {
+            "tasks": [
+                {
+                    "title": "Build login page",
+                    "completed": false
+                }
+            ],
+            "notes": [
+                "Remember to use SQLite"
+            ]
+        }
+    }
+}

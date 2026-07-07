@@ -1,53 +1,33 @@
 """
-MyAgent Intelligent Router
+MyAgent Unified Router
+
+Version: 13.0.0
 """
 
-SHELL_COMMANDS = (
-    "ls",
-    "pwd",
-    "cat",
-    "mkdir",
-    "touch",
-    "rm",
-    "cp",
-    "mv",
-    "python",
-    "git",
-    "pip",
-)
-
-MEMORY_COMMANDS = (
-    "remember",
-    "forget",
-    "show memory",
-    "what is my",
-    "what's my",
-)
-
-PLANNER_COMMANDS = (
-    "build",
-    "create",
-    "write",
-    "delete",
-    "copy",
-    "read",
-    "list",
-)
+from core.intent_router import route
+from core.project_router import route_project
+from core.planner import plan_task
 
 
 def decide(user):
+    """
+    Route a user request.
 
-    text = user.lower().strip()
+    Priority:
+        1. Project commands
+        2. Intent commands
+        3. AI Planner
+    """
 
-    if text.startswith(SHELL_COMMANDS):
-        return []
+    # Project commands
+    plan = route_project(user)
+    if plan is not None:
+        return plan
 
-    if text.startswith(MEMORY_COMMANDS):
-        from core.planner import plan_task
-        return plan_task(user)
+    # Built-in intent commands
+    plan = route(user)
+    if plan is not None:
+        return plan
 
-    if text.startswith(PLANNER_COMMANDS):
-        from core.planner import plan_task
-        return plan_task(user)
-
-    return []
+    # AI Planner
+    return plan_task(user)

@@ -94,5 +94,246 @@
                 "result": "Python"
             }
         ]
+    },
+    {
+        "goal": "Remember my favorite IDE is VS Code",
+        "created": "2026-07-04T16:37:32.043131",
+        "results": [
+            {
+                "id": 1,
+                "tool": "remember",
+                "status": "failed",
+                "attempts": 1,
+                "started_at": "2026-07-04T16:37:32.023700",
+                "finished_at": "2026-07-04T16:37:32.023833",
+                "duration": 0.0,
+                "result": "remember() missing 1 required positional argument: 'value'"
+            }
+        ]
+    },
+    {
+        "goal": "Remember my name is Okechukwu",
+        "created": "2026-07-04T21:58:10.005842",
+        "results": [
+            {
+                "id": 1,
+                "tool": "remember",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-04T21:58:09.982343",
+                "finished_at": "2026-07-04T21:58:10.002105",
+                "duration": 0.02,
+                "result": "I'll remember that name = Okechukwu"
+            }
+        ]
+    },
+    {
+        "goal": "Remember my name is Okechukwu",
+        "created": "2026-07-04T22:07:34.456206",
+        "results": [
+            {
+                "id": 1,
+                "tool": "remember",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-04T22:07:34.450667",
+                "finished_at": "2026-07-04T22:07:34.454725",
+                "duration": 0.004,
+                "result": "I'll remember that name = Okechukwu"
+            }
+        ]
+    },
+    {
+        "goal": "what is my name",
+        "created": "2026-07-04T22:07:43.375599",
+        "results": [
+            {
+                "id": 1,
+                "tool": "recall",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-04T22:07:43.373091",
+                "finished_at": "2026-07-04T22:07:43.374372",
+                "duration": 0.001,
+                "result": "Okechukwu"
+            }
+        ]
+    },
+    {
+        "goal": "Read VERSION",
+        "created": "2026-07-04T22:07:54.547510",
+        "results": [
+            {
+                "id": 1,
+                "tool": "read_file",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-04T22:07:54.525251",
+                "finished_at": "2026-07-04T22:07:54.546257",
+                "duration": 0.021,
+                "result": "11.0.0-dev\n"
+            }
+        ]
+    },
+    {
+        "goal": "list files",
+        "created": "2026-07-04T22:08:07.407319",
+        "results": [
+            {
+                "id": 1,
+                "tool": "list_files",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-04T22:08:07.405073",
+                "finished_at": "2026-07-04T22:08:07.405566",
+                "duration": 0.0,
+                "result": [
+                    "agent.py",
+                    ".gitignore",
+                    "memory.json",
+                    "update.py",
+                    "project",
+                    "note.txt",
+                    ".git",
+                    ".env.example",
+                    "test2",
+                    "developer.py",
+                    "TestRegistry",
+                    "config.py",
+                    "requirements.txt",
+                    "README.md",
+                    "__pycache__",
+                    ".env",
+                    "test_folder",
+                    "games",
+                    "Demo",
+                    "RegistryTest",
+                    "core",
+                    "data",
+                    "plugins",
+                    "tests",
+                    "backups",
+                    "ExecutorTest",
+                    "MyPortfolio",
+                    "TestWebsite",
+                    "ExecutorTest2",
+                    "VERSION",
+                    "archive",
+                    "backup"
+                ]
+            }
+        ]
+    },
+    {
+        "goal": "Create project TestProject",
+        "created": "2026-07-07T19:08:55.156182",
+        "results": [
+            {
+                "id": 1,
+                "tool": "create_project",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:08:55.136578",
+                "finished_at": "2026-07-07T19:08:55.137827",
+                "duration": 0.001,
+                "result": "Project already exists."
+            }
+        ]
+    },
+    {
+        "goal": "Project status",
+        "created": "2026-07-07T19:08:55.165389",
+        "results": [
+            {
+                "id": 1,
+                "tool": "project_status",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:08:55.162084",
+                "finished_at": "2026-07-07T19:08:55.163862",
+                "duration": 0.002,
+                "result": "Active Project : testproject\nTasks          : 0\nNotes          : 0"
+            }
+        ]
+    },
+    {
+        "goal": "Add task Build login page",
+        "created": "2026-07-07T19:08:55.175660",
+        "results": [
+            {
+                "id": 1,
+                "tool": "add_task",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:08:55.172036",
+                "finished_at": "2026-07-07T19:08:55.174211",
+                "duration": 0.002,
+                "result": "Task added to testproject."
+            }
+        ]
+    },
+    {
+        "goal": "Show tasks",
+        "created": "2026-07-07T19:08:55.183062",
+        "results": [
+            {
+                "id": 1,
+                "tool": "show_tasks",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:08:55.180592",
+                "finished_at": "2026-07-07T19:08:55.181602",
+                "duration": 0.001,
+                "result": "[ ] 1. Build login page"
+            }
+        ]
+    },
+    {
+        "goal": "Add note Remember to use SQLite",
+        "created": "2026-07-07T19:08:55.195534",
+        "results": [
+            {
+                "id": 1,
+                "tool": "add_note",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:08:55.191513",
+                "finished_at": "2026-07-07T19:08:55.193908",
+                "duration": 0.002,
+                "result": "Note added."
+            }
+        ]
+    },
+    {
+        "goal": "Show notes",
+        "created": "2026-07-07T19:08:55.204920",
+        "results": [
+            {
+                "id": 1,
+                "tool": "show_notes",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:08:55.201745",
+                "finished_at": "2026-07-07T19:08:55.203398",
+                "duration": 0.002,
+                "result": "- Remember to use SQLite"
+            }
+        ]
+    },
+    {
+        "goal": "List projectsexit",
+        "created": "2026-07-07T19:11:25.468799",
+        "results": [
+            {
+                "id": 1,
+                "tool": "list_projects",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:11:25.464427",
+                "finished_at": "2026-07-07T19:11:25.466150",
+                "duration": 0.002,
+                "result": "TestProject\ntestproject"
+            }
+        ]
     }
 ]

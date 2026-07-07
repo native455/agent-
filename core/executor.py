@@ -1,7 +1,7 @@
 """
 MyAgent Executor
 
-Version: 12.0.0
+Version: 13.0.2
 """
 
 from core.registry import execute_tool
@@ -20,6 +20,10 @@ def execute_plan(plan, goal="Unknown Task"):
 
     total = len(plan)
 
+    # Automatically assign IDs
+    for index, task in enumerate(plan, start=1):
+        task.setdefault("id", index)
+
     for task in plan:
 
         print(f"[{task['id']}/{total}] {task['tool']}")
@@ -31,38 +35,34 @@ def execute_plan(plan, goal="Unknown Task"):
             task
         )
 
-        # Retry engine itself failed
-        if not success:
-
-            fail_task(task)
-
-            results.append(
-                {
-                    "id": task["id"],
-                    "tool": task["tool"],
-                    "status": task["status"],
-                    "attempts": attempts,
-                    "started_at": task["started_at"],
-                    "finished_at": task["finished_at"],
-                    "duration": task["duration"],
-                    "result": str(tool_result),
-                }
-            )
-
-            continue
-
-        # Tool Result API
-        if tool_result["success"]:
+        # Tool executed successfully
+        if success:
 
             finish_task(task)
 
-            output = tool_result["data"]
+            # New-style tool result
+            if isinstance(tool_result, dict):
+
+                if tool_result.get("success", True):
+                    output = tool_result.get(
+                        "data",
+                        tool_result.get("message", "")
+                    )
+                else:
+                    output = tool_result.get(
+                        "error",
+                        "Unknown error."
+                    )
+
+            # Old-style tool result (string, list, etc.)
+            else:
+                output = tool_result
 
         else:
 
             fail_task(task)
 
-            output = tool_result["error"]
+            output = str(tool_result)
 
         results.append(
             {
