@@ -9,7 +9,7 @@ from core.bootstrap import bootstrap
 # Initialize MyAgent
 bootstrap()
 
-from core.ai import ask_ai
+from core.chat_ai import ask_chat
 from core.router import decide
 from core.executor import execute_plan
 
@@ -85,7 +85,7 @@ while True:
 
     try:
 
-        reply = ask_ai(messages)
+        reply = ask_chat(messages)
 
         if reply is None:
             reply = "I don't have a response."

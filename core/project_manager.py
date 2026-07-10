@@ -1,7 +1,7 @@
 """
 MyAgent Project Manager
 
-Version: 13.0.0
+Version: 13.1.0
 """
 
 from pathlib import Path
@@ -11,6 +11,8 @@ from core.project_storage import (
     save_database,
 )
 
+from core.context_manager import context_manager
+
 
 PROJECT_ROOT = Path("Projects")
 
@@ -18,7 +20,6 @@ PROJECT_ROOT = Path("Projects")
 class ProjectManager:
 
     def __init__(self):
-
         PROJECT_ROOT.mkdir(exist_ok=True)
 
     def create(self, name):
@@ -58,6 +59,12 @@ class ProjectManager:
 
         save_database(db)
 
+        # Sync Context Engine
+        context_manager.set_project(name)
+        context_manager.set_folder(str(project))
+        context_manager.set_file(None)
+        context_manager.set_mode("project")
+
         return True, f"Project '{name}' created."
 
     def list_projects(self):
@@ -81,6 +88,14 @@ class ProjectManager:
 
         save_database(db)
 
+        project = PROJECT_ROOT / name
+
+        # Sync Context Engine
+        context_manager.set_project(name)
+        context_manager.set_folder(str(project))
+        context_manager.set_file(None)
+        context_manager.set_mode("project")
+
         return True, f"Opened '{name}'."
 
     def close(self):
@@ -90,6 +105,9 @@ class ProjectManager:
         db["active"] = None
 
         save_database(db)
+
+        # Clear Context Engine
+        context_manager.clear()
 
         return True, "Project closed."
 

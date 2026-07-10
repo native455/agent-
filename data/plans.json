@@ -335,5 +335,53 @@
                 "result": "TestProject\ntestproject"
             }
         ]
+    },
+    {
+        "goal": "Create project DemoProject",
+        "created": "2026-07-07T19:34:16.598279",
+        "results": [
+            {
+                "id": 1,
+                "tool": "create_project",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-07T19:34:16.547421",
+                "finished_at": "2026-07-07T19:34:16.596387",
+                "duration": 0.049,
+                "result": "Project 'DemoProject' created."
+            }
+        ]
+    },
+    {
+        "goal": "what is my name",
+        "created": "2026-07-08T08:00:22.410181",
+        "results": [
+            {
+                "id": 1,
+                "tool": "recall",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-08T08:00:22.399362",
+                "finished_at": "2026-07-08T08:00:22.405498",
+                "duration": 0.006,
+                "result": "Okechukwu"
+            }
+        ]
+    },
+    {
+        "goal": "create project demo",
+        "created": "2026-07-08T18:45:22.033522",
+        "results": [
+            {
+                "id": 1,
+                "tool": "create_project",
+                "status": "completed",
+                "attempts": 1,
+                "started_at": "2026-07-08T18:45:21.995500",
+                "finished_at": "2026-07-08T18:45:22.029115",
+                "duration": 0.034,
+                "result": "Project 'demo' created."
+            }
+        ]
     }
 ]

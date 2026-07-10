@@ -1,5 +1,5 @@
 {
-    "active": "testproject",
+    "active": "demo",
     "projects": {
         "TestProject": {
             "tasks": [],
@@ -15,6 +15,14 @@
             "notes": [
                 "Remember to use SQLite"
             ]
+        },
+        "DemoProject": {
+            "tasks": [],
+            "notes": []
+        },
+        "demo": {
+            "tasks": [],
+            "notes": []
         }
     }
 }
