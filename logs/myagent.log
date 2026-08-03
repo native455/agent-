@@ -1,0 +1,28 @@
+[2026-07-10 18:45:03] [INFO] MyAgent started
+[2026-07-10 18:45:03] [WARNING] Testing logger
+[2026-07-10 18:45:03] [ERROR] Example error
+[2026-07-29 16:45:43] [INFO] USER: hello
+[2026-07-29 16:45:56] [INFO] Planner generated a response.
+[2026-07-29 16:46:03] [INFO] AI response generated.
+[2026-07-29 16:46:13] [INFO] USER: list project
+[2026-07-29 16:46:27] [INFO] Planner generated a response.
+[2026-07-29 16:46:31] [INFO] AI response generated.
+[2026-07-29 16:46:54] [INFO] USER: Build a website called DemoSite
+[2026-07-29 16:47:14] [INFO] Planner generated a response.
+[2026-07-30 10:24:30] [INFO] USER: hello
+[2026-08-03 18:58:42] [INFO] USER: show memory
+[2026-08-03 18:58:42] [INFO] Starting task: show_memory []
+[2026-08-03 18:58:42] [INFO] Completed task: show_memory
+[2026-08-03 18:58:52] [INFO] USER: list project
+[2026-08-03 18:58:56] [INFO] Planner generated a response.
+[2026-08-03 18:59:04] [INFO] AI response generated.
+[2026-08-03 18:59:29] [INFO] USER: build a website demosite
+[2026-08-03 18:59:29] [INFO] Starting task: build_website ['demosite']
+[2026-08-03 19:00:25] [INFO] Completed task: build_website
+[2026-08-03 19:05:41] [INFO] USER: exit
+[2026-08-03 19:05:41] [INFO] MyAgent exited.
+[2026-08-03 19:12:25] [INFO] USER: build a website demosite
+[2026-08-03 19:12:25] [INFO] Starting task: build_website ['demosite']
+[2026-08-03 19:12:25] [INFO] Completed task: build_website
+[2026-08-03 19:13:46] [INFO] USER: exit
+[2026-08-03 19:13:46] [INFO] MyAgent exited.

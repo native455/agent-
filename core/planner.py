@@ -1,13 +1,14 @@
 """
 Dynamic Planner
 
-MyAgent V13.4.0
+MyAgent V14.1.0
 """
 
 import json
-
+from core.plan_validator import validate_plan
 from core.planner_ai import ask_planner
 from core.registry import list_available_tools
+from core.logger import logger
 
 
 def build_prompt():
@@ -61,6 +62,7 @@ Intelligence Rules:
 - If the user asks to summarize or inspect a project, use project_summary.
 - If the user asks to index a project, use index_code_project.
 - If the user asks about imports or module relationships, use scan_dependencies.
+
 Example:
 
 [
@@ -103,6 +105,8 @@ def plan_task(user):
 
     reply = ask_planner(messages)
 
+    logger.info("Planner generated a response.")
+
     print("\n========== PLANNER RAW RESPONSE ==========")
     print(reply)
     print("==========================================\n")
@@ -114,14 +118,13 @@ def plan_task(user):
         data = json.loads(reply)
 
         if isinstance(data, dict):
-            return [data]
+            data = [data]
 
-        if isinstance(data, list):
-            return data
-
-        return []
+        return validate_plan(data)
 
     except Exception as e:
+
+        logger.error(f"Planner JSON Error: {e}")
 
         print("Planner JSON Error:", e)
 

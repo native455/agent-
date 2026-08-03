@@ -1,9 +1,10 @@
 """
 MyAgent Executor
 
-Version: 13.0.2
+Version: 14.1.0
 """
 
+from core.logger import logger
 from core.registry import execute_tool
 from core.execution_state import (
     start_task,
@@ -30,37 +31,50 @@ def execute_plan(plan, goal="Unknown Task"):
 
         start_task(task)
 
+        logger.info(
+            f"Starting task: {task['tool']} {task.get('args', [])}"
+        )
+
         success, tool_result, attempts = retry(
             execute_tool,
             task
         )
 
-        # Tool executed successfully
         if success:
 
             finish_task(task)
 
-            # New-style tool result
+            logger.info(
+                f"Completed task: {task['tool']}"
+            )
+
             if isinstance(tool_result, dict):
 
                 if tool_result.get("success", True):
+
                     output = tool_result.get(
                         "data",
                         tool_result.get("message", "")
                     )
+
                 else:
+
                     output = tool_result.get(
                         "error",
                         "Unknown error."
                     )
 
-            # Old-style tool result (string, list, etc.)
             else:
+
                 output = tool_result
 
         else:
 
             fail_task(task)
+
+            logger.error(
+                f"Task failed: {task['tool']}"
+            )
 
             output = str(tool_result)
 

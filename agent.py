@@ -1,7 +1,7 @@
 """
 MyAgent
 
-Version: 12.4.3
+Version: 14.1.0
 """
 
 from core.bootstrap import bootstrap
@@ -12,6 +12,7 @@ bootstrap()
 from core.chat_ai import ask_chat
 from core.router import decide
 from core.executor import execute_plan
+from core.logger import logger
 
 messages = [
     {
@@ -21,7 +22,7 @@ messages = [
 ]
 
 print("=" * 50)
-print("            MyAgent V12.4.3")
+print("            MyAgent V14.1.0")
 print("=" * 50)
 print("Intent Router Enabled")
 print("Capability Registry Enabled")
@@ -32,7 +33,10 @@ while True:
 
     user = input("You: ").strip()
 
+    logger.info(f"USER: {user}")
+
     if user.lower() == "exit":
+        logger.info("MyAgent exited.")
         print("\nGoodbye.\n")
         break
 
@@ -87,6 +91,8 @@ while True:
 
         reply = ask_chat(messages)
 
+        logger.info("AI response generated.")
+
         if reply is None:
             reply = "I don't have a response."
 
@@ -100,5 +106,7 @@ while True:
         )
 
     except Exception as e:
+
+        logger.error(str(e))
 
         print(f"\nAI Error: {e}\n")

@@ -1,7 +1,7 @@
 """
 MyAgent Intent Router
 
-Version: 12.4.0
+Version: 15.0.0
 
 Routes common requests without calling AI.
 """
@@ -12,8 +12,12 @@ import re
 def route(user):
 
     text = user.strip()
+    lower = text.lower()
 
-    # Remember my name is Okechukwu
+    # -------------------------
+    # Memory
+    # -------------------------
+
     m = re.match(
         r"remember my (.+?) is (.+)",
         text,
@@ -21,6 +25,7 @@ def route(user):
     )
 
     if m:
+
         key = (
             m.group(1)
             .strip()
@@ -33,11 +38,10 @@ def route(user):
         return [
             {
                 "tool": "remember",
-                "args": [key, value]
+                "args": [key, value],
             }
         ]
 
-    # What is my name?
     m = re.match(
         r"what is my (.+)",
         text,
@@ -57,11 +61,23 @@ def route(user):
         return [
             {
                 "tool": "recall",
-                "args": [key]
+                "args": [key],
             }
         ]
 
-    # Read VERSION
+    if lower == "show memory":
+
+        return [
+            {
+                "tool": "show_memory",
+                "args": [],
+            }
+        ]
+
+    # -------------------------
+    # Files
+    # -------------------------
+
     m = re.match(
         r"read (.+)",
         text,
@@ -73,19 +89,73 @@ def route(user):
         return [
             {
                 "tool": "read_file",
-                "args": [m.group(1).strip()]
+                "args": [m.group(1).strip()],
             }
         ]
 
-    # List files
-    if text.lower() == "list files":
+    if lower == "list files":
 
         return [
             {
                 "tool": "list_files",
-                "args": []
+                "args": [],
             }
         ]
 
-    # No simple intent found
+    # -------------------------
+    # Projects
+    # -------------------------
+
+    if lower == "list projects":
+
+        return [
+            {
+                "tool": "list_projects",
+                "args": [],
+            }
+        ]
+
+    if lower == "show context":
+
+        return [
+            {
+                "tool": "show_context",
+                "args": [],
+            }
+        ]
+
+    m = re.match(
+        r"build (?:a )?website(?: called)? (.+)",
+        text,
+        re.IGNORECASE,
+    )
+
+    if m:
+
+        return [
+            {
+                "tool": "build_website",
+                "args": [m.group(1).strip()],
+            }
+        ]
+
+    m = re.match(
+        r"create project (.+)",
+        text,
+        re.IGNORECASE,
+    )
+
+    if m:
+
+        return [
+            {
+                "tool": "create_project",
+                "args": [m.group(1).strip()],
+            }
+        ]
+
+    # -------------------------
+    # No direct match
+    # -------------------------
+
     return None
